@@ -43,6 +43,7 @@ import {
 } from '../../styled-components';
 
 import { SourceMetadata } from '../source-selector/source-selector';
+import { middleEllipsis } from '../../utils/middle-ellipsis';
 
 interface UsbbootDrive extends sourceDestination.UsbbootDrive {
 	progress: number;
@@ -136,17 +137,18 @@ const InitProgress = styled(
 `;
 
 export interface DriveSelectorProps
-	extends Omit<ModalProps, 'done' | 'cancel'> {
+	extends Omit<ModalProps, 'done' | 'cancel' | 'onSelect'> {
 	write: boolean;
 	multipleSelection: boolean;
 	showWarnings?: boolean;
-	cancel: () => void;
+	cancel: (drives: DrivelistDrive[]) => void;
 	done: (drives: DrivelistDrive[]) => void;
 	titleLabel: string;
 	emptyListLabel: string;
 	emptyListIcon: JSX.Element;
 	selectedList?: DrivelistDrive[];
 	updateSelectedList?: () => DrivelistDrive[];
+	onSelect?: (drive: DrivelistDrive) => void;
 }
 
 interface DriveSelectorState {
@@ -167,12 +169,14 @@ export class DriveSelector extends React.Component<
 > {
 	private unsubscribe: (() => void) | undefined;
 	tableColumns: Array<TableColumn<Drive>>;
+	originalList: DrivelistDrive[];
 
 	constructor(props: DriveSelectorProps) {
 		super(props);
 
 		const defaultMissingDriversModalState: { drive?: DriverlessDrive } = {};
 		const selectedList = this.props.selectedList || [];
+		this.originalList = [...(this.props.selectedList || [])];
 
 		this.state = {
 			drives: getDrives(),
@@ -199,7 +203,9 @@ export class DriveSelector extends React.Component<
 										fill={drive.isSystem ? '#fca321' : '#8f9297'}
 									/>
 								)}
-								<Txt ml={(hasWarnings && 8) || 0}>{description}</Txt>
+								<Txt ml={(hasWarnings && 8) || 0}>
+									{middleEllipsis(description, 32)}
+								</Txt>
 							</Flex>
 						);
 					}
@@ -259,7 +265,7 @@ export class DriveSelector extends React.Component<
 		return (
 			isUsbbootDrive(drive) ||
 			isDriverlessDrive(drive) ||
-			!isDriveValid(drive, image) ||
+			!isDriveValid(drive, image, this.props.write) ||
 			(this.props.write && drive.isReadOnly)
 		);
 	}
@@ -408,7 +414,7 @@ export class DriveSelector extends React.Component<
 					</Flex>
 				}
 				titleDetails={<Txt fontSize={11}>{getDrives().length} found</Txt>}
-				cancel={cancel}
+				cancel={() => cancel(this.originalList)}
 				done={() => done(selectedList)}
 				action={`Select (${selectedList.length})`}
 				primaryButtonProps={{
@@ -451,10 +457,16 @@ export class DriveSelector extends React.Component<
 									if (this.deselectingAll(newSelection)) {
 										newSelection = [];
 									}
+									if (this.props.onSelect) {
+										newSelection.forEach(this.props.onSelect);
+									}
 									this.setState({
 										selectedList: newSelection,
 									});
 									return;
+								}
+								if (this.props.onSelect) {
+									this.props.onSelect(newSelection[newSelection.length - 1]);
 								}
 								this.setState({
 									selectedList: newSelection.slice(newSelection.length - 1),
@@ -466,6 +478,9 @@ export class DriveSelector extends React.Component<
 									this.driveShouldBeDisabled(row, image)
 								) {
 									return;
+								}
+								if (this.props.onSelect) {
+									this.props.onSelect(row);
 								}
 								const index = selectedList.findIndex(
 									(d) => d.device === row.device,
