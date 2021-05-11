@@ -134,6 +134,7 @@ function fetchWasm(...where: string[]) {
 }
 
 const commonConfig = {
+	devtool: 'source-map',
 	mode: 'production',
 	optimization: {
 		moduleIds: 'natural',
@@ -354,6 +355,7 @@ const guiConfig = {
 	entry: {
 		gui: path.join(__dirname, 'lib', 'gui', 'app', 'renderer.ts'),
 	},
+	// entry: path.join(__dirname, 'lib', 'gui', 'app', 'renderer.ts'),
 	plugins: [
 		...commonConfig.plugins,
 		new CopyPlugin({
