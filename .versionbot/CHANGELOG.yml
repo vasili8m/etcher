@@ -1,4 +1,32 @@
 - commits:
+    - subject: Add source maps for devtools
+      hash: 98d2f7d1ab7632ddef63d761a7a084f9c3dcea41
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+      author: Lorenzo Alberto Maria Ambrosi
+    - subject: Clone submodules when initializing modules
+      hash: ec874cb9b67fed2c506c2e485c80c490ed2f0037
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+      author: Lorenzo Alberto Maria Ambrosi
+    - subject: 'patch: Select drive on list interaction rather than modal closing'
+      hash: 27e3d8281a21b12b78e3771c9075a798cde9c0a7
+      body: ''
+      footer:
+        Signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+      author: Lorenzo Alberto Maria Ambrosi
+  version: 1.5.121
+  date: 2021-05-14T10:22:06.149Z
+- commits:
     - subject: Update README to reference Cloudsmith
       hash: 7e333caaf9d94ff90583fe897ccabb6fdf860f74
       body: ''
